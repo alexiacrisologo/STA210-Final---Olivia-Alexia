@@ -7,6 +7,7 @@ format: pdf
 ```{r read-data}
 library(dplyr)
 library(tidyverse)
+library(tidymodels)
 library(ggplot2)
 tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 ```
@@ -40,16 +41,6 @@ Winner_ioc: Country of the winner as assigned by the International Olympic Commi
 
 Winner_age: Age of the winner
 
-Loser_id: Identification of the loser
-
-Loser_hand: Dominant playing hand of the loser (right, left, or undecided)
-
-Loser_ht: Height of the loser in centimeters (cm)
-
-Loser_ioc: Country of the loser as assigned by the International Olympic Committee
-
-Loser_age: Age of the loser
-
 Minutes: Duration of the tennis match in minutes
 
 ```{r}
@@ -73,3 +64,26 @@ ggplot(data = tennis, aes(x = surface, y = minutes)) +
        x = "Surface",
        y = "Match Duration (minutes)")
 ```
+
+```{r}
+mean_game_duration <- mean(tennis$minutes, na.rm = TRUE)
+print(mean_game_duration)
+
+tennis_binary <- tennis |>
+  mutate(minutes = case_when(minutes >= "101.3"~ 1, 
+                             minutes <= "101.3" ~ 0))
+
+
+log_winner <- glm(as.factor(minutes) ~ surface  + 
+             winner_age + as.numeric(winner_ht) + winner_hand,
+    data = tennis_binary,
+    family = "binomial")
+summary(log_winner)
+
+log_loser <- glm(as.factor(minutes) ~ surface  + 
+             loser_age + as.numeric(loser_ht) + loser_hand,
+    data = tennis_binary,
+    family = "binomial")
+summary(log_loser)
+```
+
