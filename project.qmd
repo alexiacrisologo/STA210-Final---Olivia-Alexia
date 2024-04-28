@@ -92,6 +92,33 @@ exp(coef(loser_mins))
 exp(coef(winner_mins))
 ```
 
+**Loser**
+For the loser of a match on a court with a surface of grass is predicted to have 0.810 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+
+For the loser of a match on a court with a surface of hard is predicted to have 0.817 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+
+For the loser of a match on a court with an age one year older than another is predicted to have 1.00913 times the odds of the match running over 101.3 minutes while adjusting for playing surface, height, and playing hand.
+
+For the loser of a match on a court with a height 1 cm taller than another is predicted to have 1.031 times the odds of the match running over 101.3 minutes while adjusting for playing surface, age, and playing hand.
+
+For the loser of a match on a court who plays with their right hand is predicted to have 1.712 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
+
+For the loser of a match on a court who plays with either hand is predicted to have 0.648 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
+
+**Winner**
+For the winner of a match on a court with a surface of grass is predicted to have 0.0782 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+
+For the winner of a match on a court with a surface of hard is predicted to have 0.0820 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+
+For the winner of a match on a court with an age one year older than another is predicted to have 1.0484 times the odds of the match running over 101.3 minutes while adjusting for playing surface, height, and playing hand.
+
+For the winner of a match on a court with a height 1 cm taller than another is predicted to have 1.00889 times the odds of the match running over 101.3 minutes while adjusting for playing surface, age, and playing hand.
+
+For the winner of a match on a court who plays with their right hand is predicted to have 1.129 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
+
+For the winner of a match on a court who plays with either hand is predicted to have 0.00000273 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
+
+
 ```{r}
 library(Stat2Data)
 emplogitplot1(minutes ~ winner_age,
