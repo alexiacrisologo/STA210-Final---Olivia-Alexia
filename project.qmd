@@ -137,3 +137,31 @@ loser_mins <- glm(minutes ~ surface + loser_age +
                   famil = "binomial")
 summary(loser_mins)
 ```
+
+# Results
+
+After transforming the height variable to address the violation of linearity, we analyzed each estimate at the p=0.05 level. 
+
+For losers: 
+
+-   Surface doesn\'t have a significant effect on the match duration being above or below the threshold of 101.3 minutes
+
+-   The age of the loser has no significant effect on the match duration 
+
+-   The height of the loser has a significant effect on the match duration
+
+-   The dominant playing hand of the loser doesn\'t have a significant effect on the match duration
+
+For winners: 
+
+-   Surface doesn\'t have a significant effect on the match duration
+
+-   The age of the winner has a significant effect on the match duration
+
+-   The height of the winner has no significant effect on the match duration
+
+-   The dominant playing had of the winner doesn\'t have a significant effect on the match duration
+
+Overall, the analysis suggest that the age of the winner and height of the loser significantly influence the duration of tennis matches, while other factors seem to show no significant effects. 
+
+# Discussion
