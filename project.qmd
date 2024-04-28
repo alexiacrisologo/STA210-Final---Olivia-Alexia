@@ -2,6 +2,7 @@
 title: "Final Project"
 author: "Alexia Crisologo and Olivia Encarnacion"
 format: pdf
+bibliography: references.bib
 ---
 
 ```{r read-data}
@@ -19,7 +20,7 @@ tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 
 Does the court type impact the duration of a women's single tennis match, considering the winner's height, age, and playing hand?
 
-The data we chose was the Women's Tennis Association data set from Awesomedata's GitHub repository (https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_qual_itf_2023.csv) The data was created in 2023 and was collected from the International Tennis Federation. The data contains 34,323 observations and 49 variables. The variables of interest in our research include surface, winner and loser height, winner and loser age, and winner and loser hand. These variables will help us answer the question of the court types impact on the duration of tennis matches. There are some NA variables corresponding to the players height. Since this is our variable of interest, we will be dropping all NA values corresponding to height. This will leave us with 1,256 obeservations. Additionally, since grand slams are played on either clay, grass, or hard courts, we will be dropping the matches that were played on carpet. This will then leave us with 1,239 observations. The motivation behind this project is to help Women's Tennis players better prepare for the length of their match based on the surface they will be playing on. With the Olympics coming up, this data will help the tennis player better prepare for a match. 
+The data we chose was the Women's Tennis Association data set from Awesomedata's GitHub repository (https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_qual_itf_2023.csv) The data was created in 2023 and was collected from the International Tennis Federation. The data contains 34,323 observations and 49 variables. The variables of interest in our research include surface, winner and loser height, winner and loser age, and winner and loser hand. These variables will help us answer the question of the court types impact on the duration of tennis matches. There are some NA variables corresponding to the players height. Since this is our variable of interest, we will be dropping all NA values corresponding to height. This will leave us with 1,256 obeservations. Additionally, since grand slams are played on either clay, grass, or hard courts, we will be dropping the matches that were played on carpet. This will then leave us with 1,239 observations. The motivation behind this project is to help Women's Tennis players better prepare for the length of their match based on the surface they will be playing on. With the Olympics coming up, this data will help the tennis player better prepare for a match.[@data]
 
 ```{r}
 tennis <- tennis %>%
@@ -71,8 +72,11 @@ ggplot(data = tennis, aes(x = surface, y = minutes)) +
 
 We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player, the height of the player, and the playing hand of the player. This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn't not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret. 
 
-```{r ord-reg}
+```{r lin-reg}
 library(MASS)
+mean_game_duration <- mean(tennis$minutes, na.rm = TRUE)
+print(mean_game_duration)
+
 tennis_binary <- tennis |>
   mutate(minutes = case_when(minutes >= 101.3 ~ 1,
                              minutes <= 101.3 ~ 0),
@@ -91,6 +95,7 @@ summary(loser_mins)
 exp(coef(loser_mins))
 exp(coef(winner_mins))
 ```
+We found the average duration of a match from all of the data provided, which happened to be 101.3 minutes.  We will use this to determine if the court type causes a match to last longer or shorter than the average duration of a match throughout our project.
 
 **Loser** For the loser of a match on a court with a surface of grass is predicted to have 0.810 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
 
@@ -165,3 +170,5 @@ For winners: 
 Overall, the analysis suggest that the age of the winner and height of the loser significantly influence the duration of tennis matches, while other factors seem to show no significant effects. 
 
 # Discussion
+
+Overall, we found that the duration of matches is not actually predicted by the surface of the court, but rather age for winners and height for losers.  Originally, we did some research and found that clay courts typically host shorter matches, so we expected to see this in the results.  We decided to research further and found that in earlier years the court type mattered more and clay had shorter match durations, but in recent years this is not as significant.  With a p value of 0.148, we found age to be significant at the alpha = 0.05 level and in our results of match duration.  This proves that if the winner is older than the loser, the odds the match lasts longer than 101.3 minutes is 1.0484 times the odds that of players with equal age.  This shows that those who are younger typically have shorter games, so if an individual is older than their opponent, they should be prepared to have a match longer than average to beat their opponent.  In a similar manner with a significant p value of 0.0145 at the alpha = 0.05 value , if the loser is taller than their opponent they have 1.031 times the odds of their shorter opponent at the match lasting longer than 101.3 minutes which is the average.  In the broader context of tennis matches, if the opponent is taller and loses it is expected that their match will last longer than average, and if the opponent is older and wins the match is expected to last longer than average.  There may be limitations in our data since we do not mention bmi of the players to compare their weights, and height does not necessarily correspond to wingspan which may also be an advantage of tennis players.  Additionally, we do not mention the country they play in, which may be seen as a home field advantage, so we don't talk about their home country and the impact of playing inside versus out has on their game durations.  In the future, if we were to continue our research, we think it would be beneficial to see if longer game durations typically led to more wins or if shorter games did.  The data is reliable, and the creator, Jeff Sackmann gets his data from Tennis Abstract, and he includes some of the work he created with his own set as well.He has updated the stats for years, and just recently made his finishing touches on the 2023 dataset on March 19 2024, so he has put a lot of effort into his data.
