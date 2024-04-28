@@ -1,6 +1,6 @@
 ---
 title: "Final Project"
-author: "Alexia Crisologo and Olivia Oencarnacion"
+author: "Alexia Crisologo and Olivia Encarnacion"
 format: pdf
 ---
 
