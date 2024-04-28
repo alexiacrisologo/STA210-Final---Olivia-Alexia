@@ -8,3 +8,39 @@ format: pdf
 tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 ```
 
+# Introduction and Data
+
+### Research Question
+
+Does the court type impact the duration of a women\'s single tennis match, considering the winner\'s height, age, and playing hand?
+
+The data we chose was the Women\'s Tennis Association data set from Awesomedata\'s GitHub repository (https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_qual_itf_2023.csv) The data was created in 2023 and was collected from the International Tennis Federation. The data contains 34,323 observations and 49 variables. The variables of interest in our research include surface, the winner and loser id, winner and loser IOC (country), winner and loser height, winner and loser age, and winner and loser hand. These variables will help us answer the question of the court types impact on the duration of tennis matchs. There are some NA variables corresponding to the players height. Since this is our variable of interest, we will be dropping all NA values corresponding to height. The motivation behind this project is to help Women\'s Tennis players better prepare for the length of their match based on the surface they will be playing on. With the Olympics coming up, this data will help the tennis player better prepare for a match. 
+
+### 
+Variables of Interest
+
+Surface: Surface the match was played on (clay, grass, or hard)
+
+Winner_id: Identification of the winner
+
+Winner_hand: Dominant playing hand of the winner (right or left)
+
+Winner_ht: Height of the winner in centimeters (cm)
+
+Winner_ioc: Country of the winner as assigned by the International Olympic Committee
+
+Winner_age: Age of the winner
+
+Loser_id: Identification of the loser
+
+Loser_hand: Dominant playing hand of the loser (right or left)
+
+Loser_ht: Height of the loser in centimeters (cm)
+
+Loser_ioc: Country of the loser as assigned by the International Olympic Committee
+
+Loser_age: Age of the loser
+
+Minutes: Duration of the tennis match in minutes
+
+# Methodology
