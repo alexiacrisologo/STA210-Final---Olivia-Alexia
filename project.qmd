@@ -9,6 +9,7 @@ library(dplyr)
 library(tidyverse)
 library(tidymodels)
 library(ggplot2)
+library(Stat2Data)
 tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 ```
 
@@ -44,7 +45,7 @@ loser_age: Age of the loser
 
 Minutes: Duration of the tennis match in minutes
 
-```{r}
+```{r hand-count}
 winner_hand_counts <- tennis |>
   count(winner_hand)
 
@@ -69,16 +70,21 @@ ggplot(data = tennis, aes(x = surface, y = minutes)) +
 ```{r ord-reg}
 library(MASS)
 tennis_binary <- tennis |>
-  mutate(minutes = case_when(short = minutes <= 60 ~ "short",
-         medium = minutes >= 60 & minutes <= 100 ~ "medium",
-         long = minutes >= 100 ~ "long"))
+  mutate(minutes = case_when(minutes >= 101.3 ~ 1,
+                             minutes <= 101.3 ~ 0),
+         minutes = as.factor(minutes))
 
-winner_mins <- polr(as.factor(minutes) ~ surface + winner_age + 
-                    as.numeric(winner_ht) + winner_hand, data = tennis_binary)
+winner_mins <- glm(minutes ~ surface + winner_age + 
+                    as.numeric(winner_ht) + winner_hand, data = tennis_binary,
+                   family = "binomial")
 summary(winner_mins)
 
-loser_mins <- polr(as.factor(minutes) ~ surface + loser_age + 
-                  as.numeric(loser_ht) + loser_hand, data = tennis_binary)
+loser_mins <- glm(minutes ~ surface + loser_age + 
+                  as.numeric(loser_ht) + loser_hand, data = tennis_binary,
+                  famil = "binomial")
 summary(loser_mins)
 
+exp(coef(loser_mins))
+exp(coef(winner_mins))
 ```
+
