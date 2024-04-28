@@ -6,6 +6,8 @@ format: pdf
 
 ```{r read-data}
 library(dplyr)
+library(tidyverse)
+library(ggplot2)
 tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 ```
 
@@ -15,11 +17,12 @@ tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
 
 Does the court type impact the duration of a women\'s single tennis match, considering the winner\'s height, age, and playing hand?
 
-The data we chose was the Women\'s Tennis Association data set from Awesomedata\'s GitHub repository (https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_qual_itf_2023.csv) The data was created in 2023 and was collected from the International Tennis Federation. The data contains 34,323 observations and 49 variables. The variables of interest in our research include surface, the winner and loser id, winner and loser IOC (country), winner and loser height, winner and loser age, and winner and loser hand. These variables will help us answer the question of the court types impact on the duration of tennis matchs. There are some NA variables corresponding to the players height. Since this is our variable of interest, we will be dropping all NA values corresponding to height. This will leave us with 1,256 obeservations. The motivation behind this project is to help Women\'s Tennis players better prepare for the length of their match based on the surface they will be playing on. With the Olympics coming up, this data will help the tennis player better prepare for a match. 
+The data we chose was the Women\'s Tennis Association data set from Awesomedata\'s GitHub repository (https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_qual_itf_2023.csv) The data was created in 2023 and was collected from the International Tennis Federation. The data contains 34,323 observations and 49 variables. The variables of interest in our research include surface, the winner and loser id, winner and loser IOC (country), winner and loser height, winner and loser age, and winner and loser hand. These variables will help us answer the question of the court types impact on the duration of tennis matchs. There are some NA variables corresponding to the players height. Since this is our variable of interest, we will be dropping all NA values corresponding to height. This will leave us with 1,256 obeservations. Additionally, since grand slams are played on either clay, grass, or hard courts, we will be dropping the matches that were played on carpet. This will then leave us with 1,239 observations. The motivation behind this project is to help Women\'s Tennis players better prepare for the length of their match based on the surface they will be playing on. With the Olympics coming up, this data will help the tennis player better prepare for a match. 
 
 ```{r}
-tennis <- tennis |>
-  filter(!is.na(winner_ht) & !is.na(loser_ht))
+tennis <- tennis %>%
+  filter(!is.na(winner_ht) & !is.na(loser_ht) & surface != "Carpet")
+
 ```
 
 ### 
@@ -62,3 +65,11 @@ print(loser_hand_counts)
 ```
 
 # Methodology
+
+```{r}
+ggplot(data = tennis, aes(x = surface, y = minutes)) +
+  geom_boxplot() +
+  labs(title = "Match Duration by Court Surface",
+       x = "Surface",
+       y = "Match Duration (minutes)")
+```
