@@ -59,6 +59,8 @@ print(loser_hand_counts)
 
 # Methodology
 
+First we wanted to visualize the relationship between the match duration and the surface that match was played on. We generated a box plot for each surface, clay, grass, and hard. The results indicated that the average match duration tends to be higher for matches played on clay. 
+
 ```{r boxplot}
 ggplot(data = tennis, aes(x = surface, y = minutes)) +
   geom_boxplot() +
@@ -66,6 +68,8 @@ ggplot(data = tennis, aes(x = surface, y = minutes)) +
        x = "Surface",
        y = "Match Duration (minutes)")
 ```
+
+We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player, the height of the player, and the playing hand of the player. This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn\'t not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. Checking the assumption of linearity, there seems to be a somewhat linear relationship between the log-odds of the response and the continuous predictors for both winners and losers. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret. 
 
 ```{r ord-reg}
 library(MASS)
@@ -88,3 +92,27 @@ exp(coef(loser_mins))
 exp(coef(winner_mins))
 ```
 
+```{r}
+library(Stat2Data)
+emplogitplot1(minutes ~ winner_age,
+              data = tennis_binary,
+              ngroups = 10)
+```
+
+```{r}
+emplogitplot1(minutes ~ winner_ht,
+              data = tennis_binary,
+              ngroups = 6)
+```
+
+```{r}
+emplogitplot1(minutes ~ loser_age,
+              data = tennis_binary,
+              ngroups = 10)
+```
+
+```{r}
+emplogitplot1(minutes ~ loser_ht,
+              data = tennis_binary,
+              ngroups = 6)
+```
