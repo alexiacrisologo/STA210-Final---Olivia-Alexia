@@ -49,4 +49,16 @@ Loser_age: Age of the loser
 
 Minutes: Duration of the tennis match in minutes
 
+```{r}
+winner_hand_counts <- tennis |>
+  count(winner_hand)
+
+loser_hand_counts <- tennis |>
+  count(loser_hand)
+
+print(winner_hand_counts)
+print(loser_hand_counts)
+
+```
+
 # Methodology
