@@ -1,0 +1,10 @@
+---
+title: "Final Project"
+author: "Alexia Crisologo and Olivia Oencarnacion"
+format: pdf
+---
+
+```{r read-data}
+tennis <- read.csv("data/wta_matches_qual_itf_2023.csv")
+```
+
