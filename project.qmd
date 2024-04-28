@@ -69,7 +69,7 @@ ggplot(data = tennis, aes(x = surface, y = minutes)) +
        y = "Match Duration (minutes)")
 ```
 
-We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player, the height of the player, and the playing hand of the player. This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn\'t not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. Checking the assumption of linearity, there seems to be a somewhat linear relationship between the log-odds of the response and the continuous predictors for both winners and losers. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret. 
+We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player, the height of the player, and the playing hand of the player. This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn't not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret. 
 
 ```{r ord-reg}
 library(MASS)
@@ -92,8 +92,7 @@ exp(coef(loser_mins))
 exp(coef(winner_mins))
 ```
 
-**Loser**
-For the loser of a match on a court with a surface of grass is predicted to have 0.810 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+**Loser** For the loser of a match on a court with a surface of grass is predicted to have 0.810 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
 
 For the loser of a match on a court with a surface of hard is predicted to have 0.817 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
 
@@ -105,8 +104,7 @@ For the loser of a match on a court who plays with their right hand is predicted
 
 For the loser of a match on a court who plays with either hand is predicted to have 0.648 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
 
-**Winner**
-For the winner of a match on a court with a surface of grass is predicted to have 0.0782 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
+**Winner** For the winner of a match on a court with a surface of grass is predicted to have 0.0782 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
 
 For the winner of a match on a court with a surface of hard is predicted to have 0.0820 times the odds of the match running over 101.3 minutes compared to a surface of clay while adjusting for age, height, and playing hand.
 
@@ -118,28 +116,24 @@ For the winner of a match on a court who plays with their right hand is predicte
 
 For the winner of a match on a court who plays with either hand is predicted to have 0.00000273 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
 
+We then checked to see if the linearity condition was met for the continuous predictors that we used on our variables. Our plots indicated that the winner age and loser age passed the linearity assumption. The linearity condition was not met for the predictors winner_ht and loser_ht. To address this violation of the linearity assumption, we used a log transformation on these variables. 
+
+We produced two models as seen below:
+
+p(1-p) = the odds of the match duration being above 101.3 minutes.
+
+$$log(p/(1-p)) = \beta_0 + \beta_1(surface) + \beta_2(winner\_age) + \beta_3(log(winner\_ht)) + \beta_4(winner\_hand)$$
+
+$$log(p/(1-p)) = \beta_0 + \beta_1(surface) + \beta_2(log(loser\_age)) + \beta_3(log(loser\_ht)) + \beta_4(loser\_hand)$$
 
 ```{r}
-library(Stat2Data)
-emplogitplot1(minutes ~ winner_age,
-              data = tennis_binary,
-              ngroups = 10)
-```
+winner_mins <- glm(minutes ~ surface + winner_age + 
+                    log(as.numeric(winner_ht)) + winner_hand, data = tennis_binary,
+                   family = "binomial")
+summary(winner_mins)
 
-```{r}
-emplogitplot1(minutes ~ winner_ht,
-              data = tennis_binary,
-              ngroups = 6)
-```
-
-```{r}
-emplogitplot1(minutes ~ loser_age,
-              data = tennis_binary,
-              ngroups = 10)
-```
-
-```{r}
-emplogitplot1(minutes ~ loser_ht,
-              data = tennis_binary,
-              ngroups = 6)
+loser_mins <- glm(minutes ~ surface + loser_age + 
+                  log(as.numeric(loser_ht)) + loser_hand, data = tennis_binary,
+                  famil = "binomial")
+summary(loser_mins)
 ```
