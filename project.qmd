@@ -38,14 +38,14 @@ p2 <- ggplot(tennis, aes(x = winner_age, y = minutes)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Winner Age", y = "Match Duration (min)",
-       title = "Winner Age vs. Match Duration", subtitle = "Positive relationship: winner age & match duration") +
+       title = "Winner Age vs. Match Duration", subtitle = "Positive relationship between winner age and match duration") +
   theme_minimal() 
 
 p1 <- ggplot(tennis, aes(x = loser_age, y = minutes)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Loser Age", y = "Match Duration (min)",
-       title = "Loser Age vs. Match Duration", subtitle = "Negative relationship: loser age & match duration") +
+       title = "Loser Age vs. Match Duration", subtitle = "Negative relationship between loser age and match duration") +
   theme_minimal()
 
 cowplot::plot_grid(p1, p2, ncol = 1, align = "v", rel_heights = c(1.5, 1.5))
@@ -77,13 +77,13 @@ library(ggplot2)
 p1 <- ggplot(tennis, aes(x = winner_hand, y = minutes)) +
   geom_boxplot() +
   labs(x = "Winner Playing Hand", y = "Match Duration (min)",
-       title = "Winner's Hand vs. Match Duration", subtitle = "Right-handed winners: highest avg match") +
+       title = "Winner's Hand vs. Match Duration", subtitle = "Right-handed winners: highest avg match duration") +
   theme_minimal()
 
 p2 <- ggplot(tennis, aes(x = loser_hand, y = minutes)) +
   geom_boxplot() +
   labs(x = "Loser Playing Hand", y = "Match Duration (min)",
-       title = "Loser's Hand vs. Match Duration", subtitle = "Right-handed losers: highest avg matches") +
+       title = "Loser's Hand vs. Match Duration", subtitle = "Right-handed losers: highest avg match duration") +
   theme_minimal()
 
 cowplot::plot_grid(p1, p2, ncol = 1, align = "v", rel_heights = c(1.5, 1.5))
