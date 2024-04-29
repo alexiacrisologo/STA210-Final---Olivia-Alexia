@@ -224,7 +224,7 @@ Overall, we found that the duration of matches is not actually predicted by the 
 
 # Appendix
 
-The following figures helped us determine if the linearity condition was met for the continuous predictors
+The following figures helped us determine if the linearity condition was met for the continuous predictors.
 
 ```{r}
 library(Stat2Data)
