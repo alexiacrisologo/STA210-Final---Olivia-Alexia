@@ -30,6 +30,74 @@ tennis <- tennis %>%
 
 ```
 
+The following plots were created to visualize the relationship between each variable of interest and the match duration. The plots created helped us to understand from a visual standpoint which variables seem to have the greatest impact.
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+p2 <- ggplot(tennis, aes(x = winner_age, y = minutes)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Winner Age", y = "Match Duration (min)",
+       title = "Winner Age vs. Match Duration", subtitle = "Positive relationship: winner age & match duration") +
+  theme_minimal() 
+
+p1 <- ggplot(tennis, aes(x = loser_age, y = minutes)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Loser Age", y = "Match Duration (min)",
+       title = "Loser Age vs. Match Duration", subtitle = "Negative relationship: loser age & match duration") +
+  theme_minimal()
+
+cowplot::plot_grid(p1, p2, ncol = 1, align = "v", rel_heights = c(1.5, 1.5))
+```
+
+```{r, warning=FALSE, message=FALSE}
+p1 <- ggplot(tennis, aes(x = winner_ht, y = minutes)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Winner Height (cm)", y = "Match Duration (min)",
+       title = "Winner Height vs. Match Duration",
+       subtitle = "Positive relationship between winner height and match duration") +
+  theme_minimal()
+
+p2 <- ggplot(tennis, aes(x = loser_ht, y = minutes)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Loser Height (cm)", y = "Match Duration (min)",
+       title = "Loser Height vs. Match Duration",
+       subtitle = "Positive relationship between loser height and match duration") +
+  theme_minimal()
+
+cowplot::plot_grid(p1, p2, ncol = 1, align = "v", rel_heights = c(1.5, 1.5))
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+
+p1 <- ggplot(tennis, aes(x = winner_hand, y = minutes)) +
+  geom_boxplot() +
+  labs(x = "Winner Playing Hand", y = "Match Duration (min)",
+       title = "Winner's Hand vs. Match Duration", subtitle = "Right-handed winners: highest avg match") +
+  theme_minimal()
+
+p2 <- ggplot(tennis, aes(x = loser_hand, y = minutes)) +
+  geom_boxplot() +
+  labs(x = "Loser Playing Hand", y = "Match Duration (min)",
+       title = "Loser's Hand vs. Match Duration", subtitle = "Right-handed losers: highest avg matches") +
+  theme_minimal()
+
+cowplot::plot_grid(p1, p2, ncol = 1, align = "v", rel_heights = c(1.5, 1.5))
+```
+
+```{r boxplot, warning = F, message = F}
+ggplot(data = tennis, aes(x = surface, y = minutes)) +
+  geom_boxplot() +
+  labs(title = "Match Duration by Court Surface",
+       subtitle = "Clay has the highest average match duration in minutes",
+       x = "Surface",
+       y = "Match Duration (min)")
+```
+
 ### Variables of Interest
 
 Surface: Surface the match was played on (clay, grass, or hard)
@@ -50,18 +118,7 @@ Minutes: Duration of the tennis match in minutes
 
 # Methodology
 
-First we wanted to visualize the relationship between the match duration and the surface that match was played on. We generated a box plot for each surface, clay, grass, and hard. The results indicated that the average match duration tends to be higher for matches played on clay.
-
-```{r boxplot, warning = F, message = F}
-ggplot(data = tennis, aes(x = surface, y = minutes)) +
-  geom_boxplot() +
-  labs(title = "Match Duration by Court Surface",
-       subtitle = "Clay has the highest average match duration in minutes",
-       x = "Surface",
-       y = "Match Duration (minutes)")
-```
-
-We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player (winner/loser), the height of the player (winner/loser), and/or the playing hand of the player (winner/loser). This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn't not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret.
+We are using a logistic regression model to evaluate whether the length of a tennis match is influenced by the surface the match is played on, the age of the player (winner/loser), the height of the player (winner/loser), and/or the playing hand of the player (winner/loser). While our graphs indicate relationships between certain variables and the duration of the match, we wanted to test which had the greatest impact and was significant in impacting the duraiton of the women's tennis match. This seems to be an appropriate model for our data given that it satisfies the independence and linearity assumptions in the log odds. Each observation in the dataset represents a different tennis match making this assumption hold since each tennis match is independent of each other. The outcome of one match doesn't not influence the outcome of the other. In addition, there is independence within each player. The characteristics of one player do not directly influence the characteristics of the other. For the outcome variable, we chose to use the binary version of whether a match was above or below the average minutes of all the matches. This binary outcome generates a simpler model that makes it easier to observe and interpret.
 
 ```{r lin-reg, message = F, warning = F}
 library(MASS)
@@ -174,12 +231,10 @@ library(Stat2Data)
 
 par(mfrow = c(1, 2))
 
-# Plot 1
 emplogitplot1(minutes ~ winner_age,
               data = tennis_binary,
               ngroups = 10)
 
-# Plot 2
 emplogitplot1(minutes ~ as.numeric(winner_ht),
               data = tennis_binary,
               ngroups = 6)
