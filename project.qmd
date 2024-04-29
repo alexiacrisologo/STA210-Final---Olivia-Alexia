@@ -48,18 +48,6 @@ loser_age: Age of the loser
 
 Minutes: Duration of the tennis match in minutes
 
-```{r hand-count}
-winner_hand_counts <- tennis |>
-  count(winner_hand)
-
-loser_hand_counts <- tennis |>
-  count(loser_hand)
-
-print(winner_hand_counts)
-print(loser_hand_counts)
-
-```
-
 # Methodology
 
 First we wanted to visualize the relationship between the match duration and the surface that match was played on. We generated a box plot for each surface, clay, grass, and hard. The results indicated that the average match duration tends to be higher for matches played on clay.
@@ -68,6 +56,7 @@ First we wanted to visualize the relationship between the match duration and the
 ggplot(data = tennis, aes(x = surface, y = minutes)) +
   geom_boxplot() +
   labs(title = "Match Duration by Court Surface",
+       subtitle = "Clay has the highest average match duration in minutes",
        x = "Surface",
        y = "Match Duration (minutes)")
 ```
@@ -87,12 +76,12 @@ tennis_binary <- tennis |>
 winner_mins <- glm(minutes ~ surface + winner_age + 
                     as.numeric(winner_ht) + winner_hand, data = tennis_binary,
                    family = "binomial")
-summary(winner_mins)
+tidy(winner_mins)
 
 loser_mins <- glm(minutes ~ surface + loser_age + 
                   as.numeric(loser_ht) + loser_hand, data = tennis_binary,
                   famil = "binomial")
-summary(loser_mins)
+tidy(loser_mins)
 
 exp(coef(loser_mins))
 exp(coef(winner_mins))
@@ -124,7 +113,7 @@ For the winner of a match on a court who plays with their right hand is predicte
 
 For the winner of a match on a court who plays with either hand is predicted to have 0.00000273 times the odds of the match running over 101.3 minutes, compared to that of a left handed player while adjusting for playing surface, age, and height.
 
-We then checked to see if the linearity condition was met for the continuous predictors that we used on our variables. Our plots indicated that the winner age and loser age passed the linearity assumption. The linearity condition was not met for the predictors winner_ht and loser_ht. To address this violation of the linearity assumption, we used a log transformation on these variables.
+We then checked to see if the linearity condition was met for the continuous predictors that we used on our variables. Our plots indicated that the winner age and loser age passed the linearity assumption. The linearity condition was not met for the predictors winner_ht and loser_ht (see appendix for linearity plots). To address this violation of the linearity assumption, we used a log transformation on these variables.
 
 We produced two models as seen below:
 
@@ -132,18 +121,18 @@ p(1-p) = the odds of the match duration being above 101.3 minutes.
 
 $$log(p/(1-p)) = \beta_0 + \beta_1(surface) + \beta_2(winner\_age) + \beta_3(log(winner\_ht)) + \beta_4(winner\_hand)$$
 
-$$log(p/(1-p)) = \beta_0 + \beta_1(surface) + \beta_2(log(loser\_age)) + \beta_3(log(loser\_ht)) + \beta_4(loser\_hand)$$
+$$log(p/(1-p)) = \beta_0 + \beta_1(surface) + \beta_2(loser\_age) + \beta_3(log(loser\_ht)) + \beta_4(loser\_hand)$$
 
 ```{r}
 winner_mins <- glm(minutes ~ surface + winner_age + 
                     log(as.numeric(winner_ht)) + winner_hand, data = tennis_binary,
                    family = "binomial")
-summary(winner_mins)
+tidy(winner_mins)
 
 loser_mins <- glm(minutes ~ surface + loser_age + 
                   log(as.numeric(loser_ht)) + loser_hand, data = tennis_binary,
                   famil = "binomial")
-summary(loser_mins)
+tidy(loser_mins)
 ```
 
 # Results
@@ -175,3 +164,38 @@ Overall, the analysis suggests that the age of the winner and height of the lose
 # Discussion
 
 Overall, we found that the duration of matches is not actually predicted by the surface of the court, but rather age for winners and height for losers. Originally, we did some research and found that clay courts typically host shorter matches, so we expected to see this in the results [@research]. We decided to research further and found that in earlier years the court type mattered more and clay had shorter match duration, but in recent years this is not as significant. With a p value of 0.0148, we found age to be significant at the alpha = 0.05 level and in our results of match duration. This proves that if the winner is older than the loser, the odds the match lasts longer than 101.3 minutes is 1.0484 times the odds that of players with equal age. This shows that those who are younger typically have shorter games, so if an individual is older than their opponent, they should be prepared to have a match longer than average to beat their opponent. In a similar manner with a significant p value of 0.0145 at the alpha = 0.05 value, if the loser is taller than their opponent they have 1.031 times the odds of their shorter opponent at the match lasting longer than 101.3 minutes which is the average. This indicates that if a player finds themselves facing a taller opponent, they should be prepared for the match to last longer than average. In the broader context of tennis matches, if the opponent is taller and loses it is expected that their match will last longer than average, and if the opponent is older and wins the match is expected to last longer than average. The results indicate that for a player to better prepare for a match, they should focus on the age and height of the opponent to better perpare for the duration of the match. When playing a taller and/or older player, they can expect their match to last longer than average (101.3 minutes). There may be limitations in our data since we do not mention bmi of the players to compare their weights, and height does not necessarily correspond to wingspan which may also be an advantage of tennis players. Additionally, we do not mention the country they play in, which may be seen as a home field advantage, so we don't talk about their home country and the impact of playing inside versus out has on their game duration. In the future, if we were to continue our research, we think it would be beneficial to see if longer game duration typically led to more wins or if shorter games did. The data is reliable, and the creator, Jeff Sackmann gets his data from Tennis Abstract, and he includes some of the work he created with his own set as well. He has updated the stats for years, and just recently made his finishing touches on the 2023 dataset on March 19 2024, so he has put a lot of effort into his data.
+
+# Appendix
+
+The following figures helped us determine if the linearity condition was met for the continuous predictors
+
+```{r}
+library(Stat2Data)
+
+par(mfrow = c(1, 2))
+
+# Plot 1
+emplogitplot1(minutes ~ winner_age,
+              data = tennis_binary,
+              ngroups = 10)
+
+# Plot 2
+emplogitplot1(minutes ~ as.numeric(winner_ht),
+              data = tennis_binary,
+              ngroups = 6)
+
+par(mfrow = c(1, 1))
+
+par(mfrow = c(1, 2))
+
+emplogitplot1(minutes ~ loser_age,
+              data = tennis_binary,
+              ngroups = 10)
+
+emplogitplot1(minutes ~ as.numeric(loser_ht),
+              data = tennis_binary,
+              ngroups = 6)
+
+par(mfrow = c(1, 1))
+
+```
