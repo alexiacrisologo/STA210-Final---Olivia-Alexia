@@ -233,11 +233,13 @@ par(mfrow = c(1, 2))
 
 emplogitplot1(minutes ~ winner_age,
               data = tennis_binary,
-              ngroups = 10)
+              ngroups = 10,
+              main = "Slight evidence of linearity")
 
 emplogitplot1(minutes ~ as.numeric(winner_ht),
               data = tennis_binary,
-              ngroups = 6)
+              ngroups = 6,
+             main = "Non-linearity")
 
 par(mfrow = c(1, 1))
 
@@ -245,11 +247,13 @@ par(mfrow = c(1, 2))
 
 emplogitplot1(minutes ~ loser_age,
               data = tennis_binary,
-              ngroups = 10)
+              ngroups = 10,
+              main = "Non-linearity")
 
 emplogitplot1(minutes ~ as.numeric(loser_ht),
               data = tennis_binary,
-              ngroups = 6)
+              ngroups = 6,
+              main = "Slight evidence of linearity")
 
 par(mfrow = c(1, 1))
 
